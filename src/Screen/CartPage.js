@@ -48,7 +48,7 @@ function CartPage(props) {
     <div className="container">
       <center><h2>CART</h2></center>
       {
-      product?
+      product[0]?
         <table class="table table-striped ">
           <thead class="thead-dark">
             <tr>

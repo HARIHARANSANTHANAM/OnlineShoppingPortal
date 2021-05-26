@@ -44,12 +44,16 @@ function Home(props) {
         localStorage.setItem("Product", JSON.stringify(cart));
         const cartl=JSON.parse(localStorage.getItem("Product")).filter(c=> pro.user.username === c.user.username);
          setcartlength(cartl.length);
+         toast.success("Product is Added to Cart...",{
+        });
         }
       } else {
         const newcart = [];
         newcart.push(pro);
         setcartlength(newcart.length);
         localStorage.setItem("Product", JSON.stringify(newcart));
+        toast.success("Product is Added to Cart...",{
+        });
       }
     } else {
       localStorage.setItem("Product", null);
