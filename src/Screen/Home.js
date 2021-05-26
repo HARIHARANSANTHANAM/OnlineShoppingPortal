@@ -1,27 +1,54 @@
 import React from "react";
 import product from "../product.json";
 import { Link } from "react-router-dom";
+import {toast,ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function Home() {
+function Home(props) {
+  const {setcartlength}=props;
   React.useEffect(() => {
     if ("Product" in localStorage) {
-      console.log("Cart is Empty");
     } else {
       localStorage.setItem("Product", null);
     }
+    if(JSON.parse(localStorage.getItem("User"))==null)
+    {
+            window.location='/Login';
+        }
   }, []);
 
-  const handleAddtoCart = (product) => {
+  const handleAddtoCart = (pro) => {
+    let Product_EXIST_In_Cart=false;
     if ("Product" in localStorage) {
-      product["user"] = JSON.parse(localStorage.getItem("User"));
+      pro["user"] = JSON.parse(localStorage.getItem("User"));
       if (JSON.parse(localStorage.getItem("Product")) != null) {
         const cart = JSON.parse(localStorage.getItem("Product"));
         console.log(cart);
-        cart.push(product);
+         for(const c of cart)
+         {
+           if(pro.imgUrl===c.imgUrl && pro.user.username === c.user.username)
+           {
+             Product_EXIST_In_Cart=true;
+             break;
+           }
+         }
+         console.log(Product_EXIST_In_Cart);
+        if(Product_EXIST_In_Cart)
+        {
+          toast.warning("Product is Already Added to Cart...",{
+          });
+          console.log("Product is Already Added to Cart...")
+        }
+        else{
+        cart.push(pro);
         localStorage.setItem("Product", JSON.stringify(cart));
+        const cartl=JSON.parse(localStorage.getItem("Product")).filter(c=> pro.user.username === c.user.username);
+         setcartlength(cartl.length);
+        }
       } else {
         const newcart = [];
-        newcart.push(product);
+        newcart.push(pro);
+        setcartlength(newcart.length);
         localStorage.setItem("Product", JSON.stringify(newcart));
       }
     } else {
@@ -31,9 +58,11 @@ function Home() {
 
   return (
     <>
-      <div class="container">
-        <table class="table table-striped ">
-          <thead class="thead-dark">
+      <div style={{margin:"01%"}}>
+        <center>
+          <div className="table-responsive">
+        <table className="table table-striped ">
+          <thead className="thead-dark">
             <tr>
               <th scope="col">Id</th>
               {
@@ -48,21 +77,26 @@ function Home() {
           </thead>
           <tbody>
             {
-              product.filter(p => delete p._id).map((p, i) => {
+              product.filter(p => delete p._id && delete p.user).map((p, i) => {
                 return <tr><th scope="row">{i + 1}</th>{Object.entries(p).map(value => { 
                   if (value[0] === "imgUrl") { 
-                  return (<td><img src={value[1]} width="50" height="50" alt="" style={{borderRadius:"50%"}}></img></td>) } 
+                  return (<td><img src={value[1]} alt="" style={{borderRadius:"50%",width:"50px",height:"50px"}}></img></td>) } 
                   else { 
-                      return (<td>{value[1]}</td>)
-                  } })}
-                  <th><button className="btn btn-warning" style={{ color: "white" }} onClick={() => handleAddtoCart(p)}>Add </button></th></tr>
+                      return (<th>{value[1]}</th>)
+                  } 
+                })}
+                  <td><button className="btn btn-warning" style={{ color: "white" }} onClick={() => handleAddtoCart(p)}>Add </button></td></tr>
               })
             }
 
           </tbody>
         </table>
+        </div>
+        </center>
       </div>
             <center>
+              
+            <ToastContainer/>
       <button className="btn btn-primary"><Link to="/CartPage" style={{ color: "white", textDecoration: "none" }}>Go to Cart Page</Link></button>
       </center>
     </>

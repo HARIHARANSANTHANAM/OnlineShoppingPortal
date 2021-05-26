@@ -8,7 +8,7 @@ function Login() {
 
         React.useEffect(() => {
             
-            if(localStorage.getItem("User"))
+            if(JSON.parse(localStorage.getItem("User"))!=null)
             {
                     window.location='/Home';
                 }
