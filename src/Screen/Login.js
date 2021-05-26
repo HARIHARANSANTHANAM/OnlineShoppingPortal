@@ -6,6 +6,16 @@ function Login() {
     const [username, setusername] = useState("");    
     const [password, setpassword] = useState("");
 
+        React.useEffect(() => {
+            
+            if(localStorage.getItem("User"))
+            {
+                    window.location='/Home';
+                }
+        
+        }, [])
+
+
     const handleUsername=(e)=>{
         console.log(e.target.value);
         setusername(e.target.value);
