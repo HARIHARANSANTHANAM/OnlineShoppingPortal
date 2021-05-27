@@ -1,10 +1,15 @@
 import React,{useState} from 'react'
 import login from '../login.json';
+import useStyles from '../CSS/login.module.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function Login() {
     const [username, setusername] = useState("");    
     const [password, setpassword] = useState("");
+    const [pwdtype,setpwdtype]=useState("password");
+    const [pwdicon,setpwdicon]=useState("fa fa-eye-slash");
 
         React.useEffect(() => {
             
@@ -15,7 +20,18 @@ function Login() {
         
         }, [])
 
+ const handlepwdtype=()=>{
+     if(pwdtype==="password")
+     {
+         setpwdtype("text");
+         setpwdicon("fa fa-eye");
+     }
+     else{
+        setpwdtype("password");
+        setpwdicon("fa fa-eye-slash");
+     }
 
+ }
     const handleUsername=(e)=>{
         console.log(e.target.value);
         setusername(e.target.value);
@@ -44,16 +60,21 @@ function Login() {
             window.location='/Home';
         }
         else{
-            console.log("Please provide correct username or password");
+            toast.error("Incorrect username or password",{});
+            console.log("incorrect")
         }
         
     
     }
     return (
-        <div className="container" style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-70%)",width:"100%"}}>
+        <div className={useStyles.container}>
+            
+        <ToastContainer/>
             <center>
-                <h4>Signin</h4>
+                <h4>ConnectedH</h4>
+                <i className="fa fa-user" style={{fontSize:"30px",border:"2px solid black",borderRadius:"60px",padding:"20px"}}></i>
             </center>
+            <br></br>
         <form >
         <div class="input-group mb-3">
   <div class="input-group-prepend">
@@ -63,14 +84,21 @@ function Login() {
             </div>
             <div class="input-group mb-3">
   <div class="input-group-prepend">
-    <span class="input-group-text" id="basic-addon1">P</span>
+    <span class="input-group-text" id="basic-addon1" >P</span>
   </div>
-  <input type="password" class="form-control"  aria-label="Username" aria-describedby="basic-addon1" placeholder="Password" value={password} onChange={handlePassword}/>
+  <input type={pwdtype} class="form-control"  aria-label="Username" aria-describedby="basic-addon1" placeholder="Password" value={password} onChange={handlePassword}/>
+  <div class="input-group-prepend" onClick={()=>handlepwdtype()} style={{cursor:"pointer"}}>
+    <span class="input-group-text" id="basic-addon1" ><i className={pwdicon}></i></span>
+  </div>
             </div>
             <div style={{width:"100%"}}>
-           <button onClick={handleSubmit} className="btn btn-success" style={{width:"100%"}}>Login</button>
+           <button onClick={handleSubmit} className="btn btn-success" style={{width:"100%"}}><i className="fa fa-sign-in"></i> Signin</button>
            </div>
         </form>
+        <center>
+        <a href="#">Don't have an Account? please contact Admin</a>
+        </center>
+        <br></br>
         </div>
     )
 }
