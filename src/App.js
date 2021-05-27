@@ -4,6 +4,9 @@ import React, {useEffect} from "react";
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
 import CartPage from "./Screen/CartPage";
 import Appbar from "./Components/Appbar";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import Product from "./Screen/Product";
 
 function App() {
 
@@ -12,7 +15,10 @@ function App() {
     if ("User" in localStorage) {
       console.log("User Object exists");
       const user=JSON.parse(localStorage.getItem("User"));
+      if(user)
+      {
       const product=JSON.parse(localStorage.getItem("Product"));
+      if(product){
       const cartproduct=product.filter(p=>{
         if(p.user.username === user.username)
         {
@@ -21,6 +27,14 @@ function App() {
       })
       console.log(cartproduct)
       setcartlength(cartproduct.length);
+    }
+    else{
+      setcartlength(0);
+    }
+      }
+      else{
+        toast.error("You must be Logged In",{})
+      }
     } else {
       console.log("User not exists in Localstorage");
       localStorage.setItem("User", null);
@@ -31,16 +45,13 @@ function App() {
     <>
     <Router>
       <Switch>
-        {
-          localStorage.getItem("User")?
-          <Route path="/Home">
-            <Appbar cartlength={cartlength}/>
-          <Home  setcartlength={setcartlength}/>
-        </Route>: <Route path="/Login">
-        <Appbar cartlength={cartlength}/>
-          <Login />
+        <Route path="/" exact>
+          {JSON.parse(localStorage.getItem("User"))?
+         <> <Appbar cartlength={cartlength}/>
+          <Home  setcartlength={setcartlength}/></>:<>
+          <Appbar cartlength={cartlength}/>
+          <Login /></>}
         </Route>
-        }
         <Route path="/Home">
             <Appbar cartlength={cartlength}/>
           <Home  setcartlength={setcartlength}/>
@@ -53,9 +64,12 @@ function App() {
         <Appbar cartlength={cartlength}/>
           <CartPage setcartlength={setcartlength}/>
         </Route>
+
+        <Route path="/Product/:id" render={(props)=><Product {...props} cartlength={cartlength} setcartlength={setcartlength}/>}/>
+
       </Switch>
     </Router>
-      
+      <ToastContainer/>
     </>
   );
 }

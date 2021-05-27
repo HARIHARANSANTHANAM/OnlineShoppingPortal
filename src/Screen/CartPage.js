@@ -48,16 +48,18 @@ function CartPage(props) {
     <div className="container">
       <center><h2>CART</h2></center>
       {
-      product[0]?
+      product && product[0]?
         <table class="table table-striped ">
           <thead class="thead-dark">
             <tr>
               <th scope="col">Id</th>
               {
                 product[0] && Object.keys(product[0]).map((keys,i) => {
+                  if(keys!=="id"){
                   return (
                     <th scope="col" key={i}>{keys}</th>
                   );
+                  }
                 })
               }
               <th scope="col">Remove</th>
@@ -69,7 +71,7 @@ function CartPage(props) {
                 return <tr key={i}><th scope="row">{i + 1}</th>{Object.entries(p).map((value,i) => { 
                   if (value[0] === "imgUrl") { 
                   return (<td key={i}><img src={value[1]} width="50" height="50" alt="" style={{borderRadius:"50%"}}></img></td>) } 
-                  else { 
+                  else if(value[0]!=="id") { 
                       return (<td key={i}>{value[1]}</td>)
                   } })}
                   <th scope="row"><button className="btn  btn-outline-danger" onClick={(e)=>handleRemoveFromCart(p)}>Remove</button></th>

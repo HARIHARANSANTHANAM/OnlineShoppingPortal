@@ -24,11 +24,11 @@ function Appbar(props) {
     {
          JSON.parse(localStorage.getItem("User"))!=null?
     <ul className="navbar-nav mr-auto mt-2 mt-lg-0" >
-      <li className="nav-item active">
-        <NavLink className="nav-link" to="/Home">Home </NavLink>
+      <li className="nav-item">
+        <NavLink className="nav-link" to="/Home"><i class="fa fa-home"></i> Home </NavLink>
       </li>
       <li className="nav-item">
-        <NavLink className="nav-link"  to="/CartPage">Cart<span class="badge badge-pill badge-primary" style={{marginTop:"0%"}}>{cartlength}</span></NavLink>
+        <NavLink className="nav-link"  to="/CartPage"><i class="fa fa-shopping-cart"></i> Cart<span class="badge  badge-danger" style={{borderRadius:"50px",margin:"5px"}}>{cartlength}</span></NavLink>
       </li>
      
     </ul>:<></>

@@ -1,11 +1,12 @@
 import React from "react";
 import product from "../product.json";
-import { Link } from "react-router-dom";
+import {  useHistory } from "react-router-dom";
 import {toast,ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Home(props) {
   const {setcartlength}=props;
+  const history=useHistory();
   React.useEffect(() => {
     if ("Product" in localStorage) {
     } else {
@@ -60,6 +61,10 @@ function Home(props) {
     }
   };
 
+  const directPagetoProduct=(id)=>{
+    history.push(`/Product/${id}`)
+  }
+
   return (
     <>
       <div style={{margin:"01%"}}>
@@ -71,10 +76,15 @@ function Home(props) {
               <th scope="col">Id</th>
               {
                 product[0] && Object.keys(product[0]).map(keys => {
+                  if(keys!=="id"){
                   return (
                     <th scope="col">{keys}</th>
                   );
-                })
+                }
+                 else{
+                   return (<></>);
+                 }
+              })
               }
               <th>Cart</th>
             </tr>
@@ -82,10 +92,10 @@ function Home(props) {
           <tbody>
             {
               product.filter(p => delete p._id && delete p.user).map((p, i) => {
-                return <tr><th scope="row">{i + 1}</th>{Object.entries(p).map(value => { 
+                return <tr style={{cursor:"pointer"}}  onClick={()=>directPagetoProduct(p.id)}><th scope="row">{i + 1}</th>{Object.entries(p).map(value => { 
                   if (value[0] === "imgUrl") { 
                   return (<td><img src={value[1]} alt="" style={{borderRadius:"50%",width:"50px",height:"50px"}}></img></td>) } 
-                  else { 
+                  else if(value[0]!=="id") { 
                       return (<th>{value[1]}</th>)
                   } 
                 })}
@@ -101,8 +111,7 @@ function Home(props) {
             <center>
               
             <ToastContainer/>
-      <button className="btn btn-primary"><Link to="/CartPage" style={{ color: "white", textDecoration: "none" }}>Go to Cart Page</Link></button>
-      </center>
+        </center>
     </>
   );
 }
